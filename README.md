@@ -59,8 +59,8 @@ for question in questions:
     print("---------------------")
     ```
 
-    And the output is:
-    ```shell
+And the output is:
+```shell
 Merhaba
 [{'answer': 'Merhaba, size nasıl yardımcı olabilirim?', 'score': '0.2931'}, {'answer': 'İyiyim, teşekkür ederim. Size nasıl yardımcı olabilirim?', 'score': '0.2751'}, {'answer': 'Hayır, sadece Kurumsal Araç Kiralama operasyonları gerçekleştiriyoruz. Size başka nasıl yardımcı olabilirim?', 'score': '0.2200'}, {'answer': 'Evet, kurumsal araç kiralama hizmetleri sağlıyoruz. Size nasıl yardımcı olabilirim?', 'score': '0.2118'}]
 ---------------------
