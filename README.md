@@ -57,7 +57,7 @@ for question in questions:
     print(question.replace("<Q>", ""))
     print(results)
     print("---------------------")
-    ```
+```
 
 And the output is:
 ```shell
