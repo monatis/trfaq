@@ -3,7 +3,7 @@ import numpy as np
 from transformers import AutoTokenizer, TFAutoModel
 
 
-model_name = './bert-base-turkish-cased-nli-mean-faq-mnr'
+model_name = 'mys/bert-base-turkish-cased-nli-mean-faq-mnr'
 
 questions = [
     "Merhaba",
