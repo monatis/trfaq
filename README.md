@@ -5,8 +5,10 @@ Google supported this work by providing Google Cloud credit. Thank you Google fo
 ## What is this?
 At this repo, I'm releasing the training script and a full working inference example for my model [mys/bert-base-turkish-cased-nli-mean-faq-mnr](https://huggingface.co/mys/bert-base-turkish-cased-nli-mean-faq-mnr) published on HuggingFace. Please note that the training code at [`finetune_tf.py`](/finetune_tf.py) is a simplified version of the original, which is intended for educational purposes and not optimized for anything. However, it contains an implementation of the Multiple Negatives Symmetric Ranking loss, and you can use it in your own work. Additionally, I cleaned and filtered the Turkish subset of the [clips/mqa](https://huggingface.co/datasets/clips/mqa) dataset, as it contains lots of mis-encoded texts. You can download this cleaned dataset [here](https://storage.googleapis.com/mys-released-models/nlp-data/trfaq.csv).
 
+- 2021-11-30 *NEW!* This repo now includes a FAQ bot demo manageable from a Google Sheet and deployable to Cloud Run. See the section titled `Deploy Sheets Bot on Cloud Run` below.
+
 ## Model
-This is a finetuned version of [mys/bert-base-turkish-cased-nli-mean](https://huggingface.co/) for FAQ retrieval, which is itself a finetuned version of [dbmdz/bert-base-turkish-cased](https://huggingface.co/dbmdz/bert-base-turkish-cased) for NLI. It maps questions & answers to 768 dimensional vectors to be used for FAQ-style chatbots and answer retrieval in question-answering pipelines. It was trained on the Turkish subset of [clips/mqa](https://huggingface.co/datasets/clips/mqa) dataset after some cleaning/ filtering and with a Multiple Negatives Symmetric Ranking loss. Before finetuning, I added two special tokens to the tokenizer (i.e., `<Q>` for questions and `<A>` for answers) and resized the model embeddings, so you need to prepend the relevant tokens to the sequences before feeding them into the model. Please have a look at [my accompanying repo](https://github.com/monatis/trfaq) to see how it was finetuned and how it can be used in inference. The following code snippet is an excerpt from the inference at the repo.
+This is a finetuned version of [mys/bert-base-turkish-cased-nli-mean](https://huggingface.co/) for FAQ retrieval, which is itself a finetuned version of [dbmdz/bert-base-turkish-cased](https://huggingface.co/dbmdz/bert-base-turkish-cased) for NLI. It maps questions & answers to 768 dimensional vectors to be used for FAQ-style chatbots and answer retrieval in question-answering pipelines. It was trained on the Turkish subset of [clips/mqa](https://huggingface.co/datasets/clips/mqa) dataset after some cleaning/ filtering and with a Multiple Negatives Symmetric Ranking loss. Before finetuning, I added two special tokens to the tokenizer (i.e., `<Q>` for questions and `<A>` for answers) and resized the model embeddings, so you need to prepend the relevant tokens to the sequences before feeding them into the model. Please have a look at [my accompanying repo](https://github.com/monatis/trfaq) to see how it was finetuned and how it can be used in inference. The following code snippet is an excerpt from the inference example at this repo.
 
 ## Usage
 see [`inference.py`](/inference.py) for a full working example.
@@ -74,3 +76,21 @@ Kurumsal araç kiralama yapıyor musunuz?
 [{'answer': 'Evet, kurumsal araç kiralama hizmetleri sağlıyoruz. Size nasıl yardımcı olabilirim?', 'score': '0.3060'}, {'answer': 'Hayır, sadece Kurumsal Araç Kiralama operasyonları gerçekleştiriyoruz. Size başka nasıl yardımcı olabilirim?', 'score': '0.2929'}, {'answer': 'İyiyim, teşekkür ederim. Size nasıl yardımcı olabilirim?', 'score': '0.2066'}, {'answer': 'Merhaba, size nasıl yardımcı olabilirim?', 'score': '0.1945'}]
 ---------------------
 ```
+
+## Deploy Sheets Bot on Cloud Run
+This demo is heavily inspired by Ahmet Alp Balkan's [URL shortener demo with Google Sheet](https://github.com/ahmetb/sheets-url-shortener). Thank you Ahmet for such a great example!
+
+- Create a new **Google Sheet** by going to [sheets.new](https://sheets.new).
+- Add two columns, first column is the "question", the second
+   column is the "answer" to that question. [See an example](https://go.yusuf.ooo/faq-demo-sheet)
+- Set the permision as public view and save the ID of your Sheet from the URL (it’s the hash in the sheet url).
+- Click to deploy to Cloud Run, and provide your spreadsheet
+   ID while deploying:
+
+   [![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
+
+- Go to https://console.cloud.google.com/run, click on
+   `sheets-bot` service.
+- (Optional) If you want to use a custom domain like `faqbot.yusuf.ooo`, go to
+   https://console.cloud.google.com/run/domains and map the
+   `sheets-bot` to your custom domain!
