@@ -30,6 +30,7 @@ class SheetsRetriever:
     def __init__(self, sheet_id, range_name='Sheet1!A2:B', interval=5):
         self.sheet_id = sheet_id
         self.range_name = range_name
+        self.interval = interval
         self.questions = []
         self.answers = []
         self.last_refresh = -1
@@ -38,7 +39,7 @@ class SheetsRetriever:
     
     def fetch_faq_data(self):
         # Call the Sheets API
-        result = sheet.values().get(spreadsheetId=self.sheet_id,
+        result = self.sheet.values().get(spreadsheetId=self.sheet_id,
                                     range=self.range_name).execute()
         values = result.get('values', [])
 
@@ -47,7 +48,7 @@ class SheetsRetriever:
         else:
             self.questions, self.answers = self.dispatch_get_questions_and_answers(values)
     
-    def dispatch_get_questions_and_answers(values):
+    def dispatch_get_questions_and_answers(self, values):
         questions = []
         answers = []
         for question, answer in values:
@@ -57,7 +58,7 @@ class SheetsRetriever:
         return questions, answers
 
     def get(self):
-        if time.time() - (interval * 1000) > self.last_refresh:
+        if time.time() - self.interval > self.last_refresh:
             self.fetch_faq_data()
             self.last_refresh = time.time()
 
@@ -138,4 +139,4 @@ if __name__ == '__main__':
             return results[0]
 
 
-    app.run()
+    app.run(host='0.0.0.0', port=os.environ.get('PORT', 5000))
